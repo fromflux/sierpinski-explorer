@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import styles from './styles.css';
 
 import Sierpinski from './Sierpinski';
@@ -31,7 +32,7 @@ class Canvas extends Component {
     const x2 = (canvas.width - triangleWidth) / 2;
     const y2 = canvas.height - ((canvas.height - triangleHeight) / 2);
 
-    const triangle = new Sierpinski(x0, y0, x1, y1, x2, y2);
+    const triangle = new Sierpinski(x0, y0, x1, y1, x2, y2, 5);
 
     const maxScale = 50;
     this.renderer = new Renderer(canvas, maxScale);
@@ -55,6 +56,7 @@ class Canvas extends Component {
     this.dragging = true;
     this.mouseStartX = evt.nativeEvent.screenX;
     this.mouseStartY = evt.nativeEvent.screenY;
+    this.node.classList.add('dragging');
   }
 
   handleMouseMove(evt) {
@@ -70,6 +72,7 @@ class Canvas extends Component {
 
   handleMouseUp() {
     this.dragging = false;
+    this.node.classList.remove('dragging');
   }
 
   render() {

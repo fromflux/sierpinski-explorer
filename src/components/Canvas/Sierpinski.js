@@ -1,6 +1,9 @@
 class Sierpinski {
-  constructor(x0, y0, x1, y1, x2, y2) {
+  constructor(x0, y0, x1, y1, x2, y2, baseDepth) {
     this.width = Math.max(x0, x1, x2) - Math.min(x0, x1, x2);
+    this.baseDepth = baseDepth;
+    this.depth = this.baseDepth;
+    this.minWidth = Math.ceil((this.width / ((2 ** this.baseDepth) * 2)));
     this.layers = [new Float32Array(Sierpinski.divideTriangle(x0, y0, x1, y1, x2, y2))];
   }
 
@@ -11,6 +14,16 @@ class Sierpinski {
       }
     }
     return this.layers[depth];
+  }
+
+  setDepth(depth = this.baseDepth) {
+    console.log(`Current depth: ${depth}`);
+    if (depth > this.layers.length - 1) {
+      while (this.layers.length - 1 < depth) {
+        this.generateNextLayer();
+      }
+    }
+    this.depth = depth;
   }
 
   generateNextLayer() {

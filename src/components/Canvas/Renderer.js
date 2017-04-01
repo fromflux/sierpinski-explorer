@@ -21,9 +21,6 @@ class Renderer {
   }
 
   add(item) {
-    item.baseDepth = 5;
-    item.depth = item.baseDepth;
-    item.minWidth = Math.ceil((item.width / ((2 ** item.baseDepth) * 2)));
     this.renderables.push(item);
   }
 
@@ -107,11 +104,9 @@ class Renderer {
       // console.log(`triangleWidth: ${triangleWidth}`);
 
       if (triangleWidth < item.minWidth) {
-        item.depth -= 1;
-        console.log(`Current depth: ${item.depth}`);
+        item.setDepth(item.depth - 1);
       } else if (triangleWidth > item.minWidth * 2) {
-        item.depth += 1;
-        console.log(`Current depth: ${item.depth}`);
+        item.setDepth(item.depth + 1);
       }
 
       // console.log(`Scale: ${this.scale}`);

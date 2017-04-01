@@ -6,6 +6,7 @@
   "author": "Rod Melo",
   "license": "GPL-3.0",
   "dependencies": {
+    "classnames": "^2.2.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
