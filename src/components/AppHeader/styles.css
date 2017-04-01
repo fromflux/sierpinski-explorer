@@ -1,0 +1,9 @@
+.AppHeader {
+  height: 50px;
+  box-sizing: border-box;
+  color: #ffffff;
+  background-color: #546f90;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;  
+}
