@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import classnames from 'classnames';
 import styles from './styles.css';
 
 import Sierpinski from './Sierpinski';
 import Renderer from './Renderer';
 
-class Canvas extends Component {
+class SierpinskiViewer extends Component {
   constructor() {
     super();
 
+    this.reset = this.reset.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -16,35 +16,47 @@ class Canvas extends Component {
   }
 
   componentDidMount() {
-    const canvas = document.createElement('canvas');
+    this.canvas = document.createElement('canvas');
     const nodeBoundingBox = this.node.getBoundingClientRect();
-    canvas.width = nodeBoundingBox.width;
-    canvas.height = nodeBoundingBox.height;
-    this.node.appendChild(canvas);
+    this.canvas.width = nodeBoundingBox.width;
+    this.canvas.height = nodeBoundingBox.height;
+    this.node.appendChild(this.canvas);
 
-    const triangleWidth = Math.min(canvas.width, canvas.height) * 0.8;
+    const triangleWidth = Math.min(this.canvas.width, this.canvas.height) * 0.8;
     const triangleHeight = triangleWidth * Math.sin((2 * Math.PI) / 3);
 
-    const x0 = canvas.width / 2;
-    const y0 = (canvas.height - triangleHeight) / 2;
-    const x1 = canvas.width - ((canvas.width - triangleWidth) / 2);
-    const y1 = canvas.height - ((canvas.height - triangleHeight) / 2);
-    const x2 = (canvas.width - triangleWidth) / 2;
-    const y2 = canvas.height - ((canvas.height - triangleHeight) / 2);
+    const x0 = this.canvas.width / 2;
+    const y0 = (this.canvas.height - triangleHeight) / 2;
+    const x1 = this.canvas.width - ((this.canvas.width - triangleWidth) / 2);
+    const y1 = this.canvas.height - ((this.canvas.height - triangleHeight) / 2);
+    const x2 = (this.canvas.width - triangleWidth) / 2;
+    const y2 = this.canvas.height - ((this.canvas.height - triangleHeight) / 2);
 
-    const triangle = new Sierpinski(x0, y0, x1, y1, x2, y2, 5);
+    const triangle = new Sierpinski(x0, y0, x1, y1, x2, y2, this.props.depth);
 
-    const maxScale = 50;
-    this.renderer = new Renderer(canvas, maxScale);
+    const maxScale = 130;
+    this.renderer = new Renderer(this.canvas, maxScale);
 
     this.renderer.add(triangle);
     this.renderer.render();
 
     this.node.addEventListener('mousewheel', this.handleMouseWheel);
+    window.addEventListener('resize', this.reset);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.depth !== this.props.depth;
   }
 
   componentWillUnmount() {
     this.node.removeEventListener('mousewheel', this.handleMouseWheel);
+    window.removeEventListener('resize', this.reset);
+  }
+
+  reset() {
+    const nodeBoundingBox = this.node.getBoundingClientRect();
+    this.canvas.width = nodeBoundingBox.width;
+    this.canvas.height = nodeBoundingBox.height;
   }
 
   handleMouseWheel(evt) {
@@ -78,7 +90,7 @@ class Canvas extends Component {
   render() {
     return (
       <div
-        className={styles.Canvas}
+        className={styles.SierpinskiViewer}
         ref={(ref) => { this.node = ref; }}
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}
@@ -88,4 +100,12 @@ class Canvas extends Component {
   }
 }
 
-export default Canvas;
+SierpinskiViewer.propTypes = {
+  depth: React.PropTypes.number
+};
+
+SierpinskiViewer.defaultProps = {
+  depth: 5
+};
+
+export default SierpinskiViewer;

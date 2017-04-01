@@ -32,13 +32,11 @@ class Renderer {
     } else {
       this.scale = 1;
     }
-    window.requestAnimationFrame(this.render);
   }
 
   setOffset(offsetX, offsetY) {
     this.offsetX = offsetX;
     this.offsetY = offsetY;
-    window.requestAnimationFrame(this.render);
   }
 
   zoom(delta = 0.2) {
@@ -114,6 +112,7 @@ class Renderer {
       triangles = item.getTriangles(item.depth);
 
       this.renderTriangles(triangles);
+      window.requestAnimationFrame(this.render);
     });
   }
 }

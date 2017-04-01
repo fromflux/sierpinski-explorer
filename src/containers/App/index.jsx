@@ -1,27 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styles from './styles.css';
 
 import AppHeader from '../../components/AppHeader';
-import Canvas from '../../components/Canvas';
+import SierpinskiViewer from '../../components/SierpinskiViewer';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      scale: 1
-    };
-  }
-
-  render() {
-    return (
-      <div className={styles.layout}>
-        <AppHeader title="Sierpinski Triangle Explorer" />
-        <main>
-          <Canvas />
-        </main>
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div className={styles.layout}>
+    <AppHeader title="Sierpinski Triangle Explorer" />
+    <main>
+      <SierpinskiViewer depth={5} />
+    </main>
+  </div>
+);
 
 export default App;
