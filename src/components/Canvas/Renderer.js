@@ -18,12 +18,13 @@ class Renderer {
     this.scale = 1;
     this.offsetX = 0;
     this.offsetY = 0;
-    this.baseDepth = 5;
-    this.depth = this.baseDepth;
   }
 
-  add(renderable) {
-    this.renderables.push(renderable);
+  add(item) {
+    item.baseDepth = 5;
+    item.depth = item.baseDepth;
+    item.minWidth = Math.ceil((item.width / ((2 ** item.baseDepth) * 2)));
+    this.renderables.push(item);
   }
 
   setScale(scale) {
@@ -95,10 +96,9 @@ class Renderer {
 
   render() {
     this.renderables.forEach((item) => {
-      let triangles = item.getTriangles(this.depth);
-      const minWidth = Math.ceil((item.width / ((2 ** this.baseDepth) * 2)));
+      let triangles = item.getTriangles(item.depth);
 
-      // console.log(`minWidth: ${minWidth}`);
+      // console.log(`item.minWidth: ${item.minWidth}`);
 
       const minX = triangles[4];
       const maxX = triangles[2];
@@ -106,17 +106,17 @@ class Renderer {
 
       // console.log(`triangleWidth: ${triangleWidth}`);
 
-      if (triangleWidth < minWidth) {
-        this.depth -= 1;
-        console.log(`Current depth: ${this.depth}`);
-      } else if (triangleWidth > minWidth * 2) {
-        this.depth += 1;
-        console.log(`Current depth: ${this.depth}`);
+      if (triangleWidth < item.minWidth) {
+        item.depth -= 1;
+        console.log(`Current depth: ${item.depth}`);
+      } else if (triangleWidth > item.minWidth * 2) {
+        item.depth += 1;
+        console.log(`Current depth: ${item.depth}`);
       }
 
       // console.log(`Scale: ${this.scale}`);
 
-      triangles = item.getTriangles(this.depth);
+      triangles = item.getTriangles(item.depth);
 
       this.renderTriangles(triangles);
     });
