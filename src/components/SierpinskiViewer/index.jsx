@@ -61,7 +61,8 @@ class SierpinskiViewer extends Component {
 
   handleMouseWheel(evt) {
     evt.preventDefault();
-    this.renderer.zoom(-evt.deltaY / 1000);
+    // console.log(evt);
+    this.renderer.zoom(-evt.deltaY / 1000, evt.offsetX, evt.offsetY);
   }
 
   handleMouseDown(evt) {

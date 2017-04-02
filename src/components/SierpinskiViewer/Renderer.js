@@ -39,7 +39,9 @@ class Renderer {
     this.offsetY = offsetY;
   }
 
-  zoom(delta = 0.2) {
+  zoom(delta, x, y) {
+    this.transformX = x;
+    this.transformY = y;
     this.setScale(this.scale + (delta * this.scale));
   }
 
@@ -48,16 +50,17 @@ class Renderer {
   }
 
   isInView(x, y, triangleWidth) {
-    const posX = this.scale * (this.offsetX + x);
-    const posY = this.scale * (this.offsetY + y);
+    const posX = (this.offsetX + x);
+    const posY = (this.offsetY + y);
+
     return (
       (
-        posX >= -triangleWidth
-        && posX <= this.canvas.width + triangleWidth
+        posX >= 0
+        && posX <= this.canvas.width
       )
       && (
-        posY >= -triangleWidth
-        && posY <= this.canvas.height + triangleWidth
+        posY >= 0
+        && posY <= this.canvas.height
       )
     );
   }
@@ -66,52 +69,63 @@ class Renderer {
     const triangleWidth = Math.ceil(this.scale * (x1 - x2));
 
     if (this.isInView(x0, y0, triangleWidth)) {
+this.count += 1
       this.context.beginPath();
-      this.context.moveTo(this.scale * (this.offsetX + x0), this.scale * (this.offsetY + y0));
-      this.context.lineTo(this.scale * (this.offsetX + x1), this.scale * (this.offsetY + y1));
-      this.context.lineTo(this.scale * (this.offsetX + x2), this.scale * (this.offsetY + y2));
+      this.context.moveTo(x0, y0);
+      this.context.lineTo(x1, y1);
+      this.context.lineTo(x2, y2);
       this.context.fill();
+      this.rendered += 1;
     }
   }
 
-  renderTriangles(triangles) {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    for (let i = 0; i < triangles.length; i += 6) {
+  renderTriangles(vertices) {
+    for (let i = 0; i < vertices.length; i += 6) {
       this.renderTriangle(
-        triangles[i],
-        triangles[i + 1],
-        triangles[i + 2],
-        triangles[i + 3],
-        triangles[i + 4],
-        triangles[i + 5]
+        vertices[i],
+        vertices[i + 1],
+        vertices[i + 2],
+        vertices[i + 3],
+        vertices[i + 4],
+        vertices[i + 5]
       );
     }
   }
 
   render() {
-    this.renderables.forEach((item) => {
-      let triangles = item.getTriangles(item.depth);
+    this.renderables.forEach((triangle) => {
+      let vertices = triangle.getVertices(triangle.depth);
 
-      // console.log(`item.minWidth: ${item.minWidth}`);
+      // console.log(`triangle.minWidth: ${triangle.minWidth}`);
 
-      const minX = triangles[4];
-      const maxX = triangles[2];
+      const minX = vertices[4];
+      const maxX = vertices[2];
       const triangleWidth = Math.ceil(this.scale * Math.abs(maxX - minX));
 
       // console.log(`triangleWidth: ${triangleWidth}`);
 
-      if (triangleWidth < item.minWidth) {
-        item.setDepth(item.depth - 1);
-      } else if (triangleWidth > item.minWidth * 2) {
-        item.setDepth(item.depth + 1);
+      if (triangleWidth < triangle.minWidth) {
+        triangle.setDepth(triangle.depth - 1);
+      } else if (triangleWidth > triangle.minWidth * 2) {
+        triangle.setDepth(triangle.depth + 1);
       }
 
       // console.log(`Scale: ${this.scale}`);
 
-      triangles = item.getTriangles(item.depth);
+      vertices = triangle.getVertices(triangle.depth);
+this.count = 0
 
-      this.renderTriangles(triangles);
+      this.context.save();
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.context.translate(this.transformX, this.transformY);
+      this.context.scale(this.scale, this.scale);
+      this.context.translate(-this.transformX, -this.transformY);
+      this.context.translate(this.offsetX, this.offsetY);
+      this.renderTriangles(vertices);
+      this.context.restore();
+
+// console.log('this.count', this.count)
+
       window.requestAnimationFrame(this.render);
     });
   }

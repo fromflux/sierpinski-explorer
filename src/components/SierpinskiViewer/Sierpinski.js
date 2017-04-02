@@ -7,7 +7,7 @@ class Sierpinski {
     this.layers = [new Float32Array(Sierpinski.divideTriangle(x0, y0, x1, y1, x2, y2))];
   }
 
-  getTriangles(depth = this.layers.length - 1) {
+  getVertices(depth = this.layers.length - 1) {
     if (depth > this.layers.length - 1) {
       while (this.layers.length - 1 < depth) {
         this.generateNextLayer();
