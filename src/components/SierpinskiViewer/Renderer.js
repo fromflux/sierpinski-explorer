@@ -39,10 +39,20 @@ class Renderer {
     this.offsetY = offsetY;
   }
 
-  zoom(delta, x, y) {
-    this.transformX = x;
-    this.transformY = y;
-    this.setScale(this.scale + (delta * this.scale));
+  zoom(delta, transformX, transformY) {
+    const scaledDelta = delta * this.scale;
+    const newScale = this.scale + scaledDelta;
+
+    if (newScale >= 1 && newScale <= this.maxScale) {
+      const K = (this.scale * this.scale) + (this.scale * scaledDelta);
+
+      this.setOffset(
+        this.offsetX - ((transformX * scaledDelta) / K),
+        this.offsetY - ((transformY * scaledDelta) / K)
+      );
+
+      this.setScale(newScale);
+    }
   }
 
   panXY(deltaX = 0, deltaY = 0) {
@@ -50,17 +60,17 @@ class Renderer {
   }
 
   isInView(x, y, triangleWidth) {
-    const posX = (this.offsetX + x);
-    const posY = (this.offsetY + y);
+    const posX = this.scale * (this.offsetX + x);
+    const posY = this.scale * (this.offsetY + y);
 
     return (
       (
-        posX >= 0
-        && posX <= this.canvas.width
+        posX >= -triangleWidth
+        && posX <= (this.canvas.width)
       )
       && (
-        posY >= 0
-        && posY <= this.canvas.height
+        posY >= -triangleWidth
+        && posY <= (this.canvas.height)
       )
     );
   }
@@ -96,8 +106,6 @@ this.count += 1
     this.renderables.forEach((triangle) => {
       let vertices = triangle.getVertices(triangle.depth);
 
-      // console.log(`triangle.minWidth: ${triangle.minWidth}`);
-
       const minX = vertices[4];
       const maxX = vertices[2];
       const triangleWidth = Math.ceil(this.scale * Math.abs(maxX - minX));
@@ -117,10 +125,10 @@ this.count = 0
 
       this.context.save();
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.context.translate(this.transformX, this.transformY);
       this.context.scale(this.scale, this.scale);
-      this.context.translate(-this.transformX, -this.transformY);
       this.context.translate(this.offsetX, this.offsetY);
+      // this.context.setTransform(this.scale, 0, 0, this.scale,
+                                    // this.offsetX, this.offsetY);
       this.renderTriangles(vertices);
       this.context.restore();
 

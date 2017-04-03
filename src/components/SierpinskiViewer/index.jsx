@@ -8,7 +8,7 @@ class SierpinskiViewer extends Component {
   constructor() {
     super();
 
-    this.reset = this.reset.bind(this);
+    this.setSize = this.setSize.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -17,9 +17,7 @@ class SierpinskiViewer extends Component {
 
   componentDidMount() {
     this.canvas = document.createElement('canvas');
-    const nodeBoundingBox = this.node.getBoundingClientRect();
-    this.canvas.width = nodeBoundingBox.width;
-    this.canvas.height = nodeBoundingBox.height;
+    this.setSize();
     this.node.appendChild(this.canvas);
 
     const triangleWidth = Math.min(this.canvas.width, this.canvas.height) * 0.8;
@@ -40,8 +38,8 @@ class SierpinskiViewer extends Component {
     this.renderer.add(triangle);
     this.renderer.render();
 
-    this.node.addEventListener('mousewheel', this.handleMouseWheel);
-    window.addEventListener('resize', this.reset);
+    this.node.addEventListener('wheel', this.handleMouseWheel);
+    window.addEventListener('resize', this.setSize);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -49,11 +47,11 @@ class SierpinskiViewer extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousewheel', this.handleMouseWheel);
-    window.removeEventListener('resize', this.reset);
+    this.node.removeEventListener('wheel', this.handleMouseWheel);
+    window.removeEventListener('resize', this.setSize);
   }
 
-  reset() {
+  setSize() {
     const nodeBoundingBox = this.node.getBoundingClientRect();
     this.canvas.width = nodeBoundingBox.width;
     this.canvas.height = nodeBoundingBox.height;
@@ -61,7 +59,6 @@ class SierpinskiViewer extends Component {
 
   handleMouseWheel(evt) {
     evt.preventDefault();
-    // console.log(evt);
     this.renderer.zoom(-evt.deltaY / 1000, evt.offsetX, evt.offsetY);
   }
 

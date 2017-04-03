@@ -17,7 +17,6 @@ class Sierpinski {
   }
 
   setDepth(depth = this.baseDepth) {
-    // console.log(`Current depth: ${depth}`);
     if (depth > this.layers.length - 1) {
       while (this.layers.length - 1 < depth) {
         this.generateNextLayer();
