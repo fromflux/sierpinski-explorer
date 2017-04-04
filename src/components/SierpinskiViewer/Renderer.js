@@ -75,8 +75,8 @@ class Renderer {
     );
   }
 
-  renderTriangle(x0, y0, x1, y1, x2, y2) {
-    const triangleWidth = Math.ceil(this.scale * (x1 - x2));
+  renderTriangle(x0, y0, x1, y1, x2, y2, triangleWidth) {
+    // const triangleWidth = Math.ceil(this.scale * (x1 - x2));
 
     if (this.isInView(x0, y0, triangleWidth)) {
 this.count += 1
@@ -89,7 +89,7 @@ this.count += 1
     }
   }
 
-  renderTriangles(vertices) {
+  renderTriangles(vertices, triangleWidth) {
     for (let i = 0; i < vertices.length; i += 6) {
       this.renderTriangle(
         vertices[i],
@@ -97,7 +97,8 @@ this.count += 1
         vertices[i + 2],
         vertices[i + 3],
         vertices[i + 4],
-        vertices[i + 5]
+        vertices[i + 5],
+        triangleWidth
       );
     }
   }
@@ -129,7 +130,7 @@ this.count = 0
       this.context.translate(this.offsetX, this.offsetY);
       // this.context.setTransform(this.scale, 0, 0, this.scale,
                                     // this.offsetX, this.offsetY);
-      this.renderTriangles(vertices);
+      this.renderTriangles(vertices, triangleWidth);
       this.context.restore();
 
 // console.log('this.count', this.count)
