@@ -76,10 +76,8 @@ class Renderer {
   }
 
   renderTriangle(x0, y0, x1, y1, x2, y2, triangleWidth) {
-    // const triangleWidth = Math.ceil(this.scale * (x1 - x2));
-
     if (this.isInView(x0, y0, triangleWidth)) {
-this.count += 1
+      this.countRendered += 1;
       this.context.beginPath();
       this.context.moveTo(x0, y0);
       this.context.lineTo(x1, y1);
@@ -111,29 +109,24 @@ this.count += 1
       const maxX = vertices[2];
       const triangleWidth = Math.ceil(this.scale * Math.abs(maxX - minX));
 
-      // console.log(`triangleWidth: ${triangleWidth}`);
-
       if (triangleWidth < triangle.minWidth) {
         triangle.setDepth(triangle.depth - 1);
       } else if (triangleWidth > triangle.minWidth * 2) {
         triangle.setDepth(triangle.depth + 1);
       }
 
-      // console.log(`Scale: ${this.scale}`);
-
       vertices = triangle.getVertices(triangle.depth);
-this.count = 0
+      this.countRendered = 0;
 
       this.context.save();
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.context.scale(this.scale, this.scale);
       this.context.translate(this.offsetX, this.offsetY);
-      // this.context.setTransform(this.scale, 0, 0, this.scale,
-                                    // this.offsetX, this.offsetY);
+      // this.context.setTransform(this.scale, 0, 0, this.scale, this.offsetX, this.offsetY);
       this.renderTriangles(vertices, triangleWidth);
       this.context.restore();
 
-// console.log('this.count', this.count)
+      // console.log('this.countRendered', this.countRendered);
 
       window.requestAnimationFrame(this.render);
     });
