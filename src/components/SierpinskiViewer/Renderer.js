@@ -63,14 +63,15 @@ class Renderer {
     const posX = this.scale * (this.offsetX + x);
     const posY = this.scale * (this.offsetY + y);
 
+    // Assumes equilateral triangle (width > height)
     return (
       (
         posX >= -triangleWidth
-        && posX <= (this.canvas.width)
+        && posX <= this.canvas.width + triangleWidth
       )
       && (
         posY >= -triangleWidth
-        && posY <= (this.canvas.height)
+        && posY <= this.canvas.height + triangleWidth
       )
     );
   }
