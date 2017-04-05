@@ -20,7 +20,7 @@ class SierpinskiViewer extends Component {
     this.setSize();
     this.node.appendChild(this.canvas);
 
-    const triangleWidth = Math.min(this.canvas.width, this.canvas.height) * 0.8;
+    const triangleWidth = Math.min(this.canvas.width, this.canvas.height);
     const triangleHeight = triangleWidth * Math.sin((2 * Math.PI) / 3);
 
     const x0 = this.canvas.width / 2;
@@ -32,8 +32,7 @@ class SierpinskiViewer extends Component {
 
     const triangle = new Sierpinski(x0, y0, x1, y1, x2, y2, this.props.depth);
 
-    const maxScale = 130;
-    this.renderer = new Renderer(this.canvas, maxScale);
+    this.renderer = new Renderer(this.canvas, this.props.maxScale);
 
     this.renderer.add(triangle);
     this.renderer.render();
@@ -43,7 +42,8 @@ class SierpinskiViewer extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.depth !== this.props.depth;
+    return (nextProps.depth !== this.props.depth)
+      && (nextProps.maxScale !== this.props.maxScale);
   }
 
   componentWillUnmount() {
@@ -99,11 +99,13 @@ class SierpinskiViewer extends Component {
 }
 
 SierpinskiViewer.propTypes = {
-  depth: React.PropTypes.number
+  depth: React.PropTypes.number,
+  maxScale: React.PropTypes.number
 };
 
 SierpinskiViewer.defaultProps = {
-  depth: 5
+  depth: 5,
+  maxScale: 100
 };
 
 export default SierpinskiViewer;

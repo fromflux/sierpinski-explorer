@@ -8,7 +8,7 @@ const App = () => (
   <div className={styles.layout}>
     <AppHeader title="Sierpinski Triangle Explorer" />
     <main>
-      <SierpinskiViewer depth={5} />
+      <SierpinskiViewer depth={5} maxScale={130} />
     </main>
   </div>
 );

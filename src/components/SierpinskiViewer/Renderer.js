@@ -1,5 +1,5 @@
 class Renderer {
-  constructor(canvas, maxScale = 50) {
+  constructor(canvas, maxScale) {
     this.maxScale = maxScale;
 
     this.canvas = canvas;
@@ -44,6 +44,7 @@ class Renderer {
     const newScale = this.scale + scaledDelta;
 
     if (newScale >= 1 && newScale <= this.maxScale) {
+      // Magic: http://stackoverflow.com/questions/2916081/zoom-in-on-a-point-using-scale-and-translate
       const K = (this.scale * this.scale) + (this.scale * scaledDelta);
 
       this.setOffset(
@@ -55,7 +56,7 @@ class Renderer {
     }
   }
 
-  panXY(deltaX = 0, deltaY = 0) {
+  panXY(deltaX, deltaY) {
     this.setOffset(this.offsetX + (deltaX / this.scale), this.offsetY + (deltaY / this.scale));
   }
 

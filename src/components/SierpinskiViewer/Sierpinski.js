@@ -48,7 +48,7 @@ class Sierpinski {
     this.layers.push(nextLayer);
 
     const t1 = performance.now();
-    console.log(`layer ${this.layers.length - 1} took ${(t1 - t0)} milliseconds.Generated ${this.layers[this.layers.length - 1].length / 6} triangles.`);
+    console.log(`Layer ${this.layers.length - 1} took ${(t1 - t0)} milliseconds.Generated ${this.layers[this.layers.length - 1].length / 6} triangles.`);
   }
 
   static divideTriangle(x0, y0, x1, y1, x2, y2) {
