@@ -1,13 +1,11 @@
 import React from 'react';
 import styles from './styles.css';
 
-const AppHeader = ({ title }) => {
-  return (
-    <header className={styles.AppHeader}>
-      {title}
-    </header>
-  );
-}
+const AppHeader = ({ title }) => (
+  <header className={styles.AppHeader}>
+    {title}
+  </header>
+);
 
 AppHeader.propTypes = {
   title: React.PropTypes.string.isRequired

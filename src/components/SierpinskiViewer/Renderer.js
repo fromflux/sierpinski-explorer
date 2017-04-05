@@ -1,8 +1,8 @@
 class Renderer {
   constructor(canvas, maxScale) {
     this.maxScale = maxScale;
-
     this.canvas = canvas;
+
     this.context = canvas.getContext('2d');
     this.reset();
 
@@ -129,7 +129,6 @@ class Renderer {
       this.context.restore();
 
       // console.log('this.countRendered', this.countRendered);
-
       window.requestAnimationFrame(this.render);
     });
   }

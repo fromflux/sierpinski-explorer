@@ -5,6 +5,7 @@ class Sierpinski {
     this.depth = this.baseDepth;
     this.minWidth = Math.ceil((this.width / ((2 ** this.baseDepth) * 2)));
     this.layers = [new Float32Array(Sierpinski.divideTriangle(x0, y0, x1, y1, x2, y2))];
+    this.setDepth(this.baseDepth);
   }
 
   getVertices(depth = this.layers.length - 1) {
